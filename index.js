@@ -4,10 +4,8 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// Middleware to parse JSON
+// Middleware
 app.use(express.json());
-
-// Serve static files (HTML, JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Nodemailer transporter
@@ -17,23 +15,31 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: 'pandaconnect7@gmail.com',
-    pass: 'pvgitcnukcfuvhog' // Use an app password, not your Gmail password
+    pass: 'pvgitcnukcfuvhog' // Use Gmail App Password
   }
 });
 
-// Route to send a single email
+// Email sending route (send to 4 people)
 app.post('/send-email', async (req, res) => {
+  const recipients = [
+    'saisubbusai0@gmail.com',
+    'Subbuchoda0@gmail.com',
+    'subramanyamchoda50@gmail.com',
+    'subramanyamchoda1@gmail.com',
+    'pandaconnect7@gmail.com'
+  ];
+
   const mailOptions = {
     from: 'pandaconnect7@gmail.com',
-    to: 'subramanyamchoda1@gmail.com',
-    subject: 'Single Email',
-    text: 'This is a single email sent on button click.'
+    to: recipients.join(','),
+    subject: 'Group Email',
+    text: 'This is a single email sent to multiple recipients.'
   };
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent: ${info.response}`);
-    res.send('Single email sent on button click!');
+    console.log(`✅ Email sent to: ${recipients.join(', ')} | ${info.response}`);
+    res.send('Email sent to multiple recipients!');
   } catch (error) {
     console.error(`❌ Failed to send email: ${error.toString()}`);
     res.status(500).send('Failed to send email.');
