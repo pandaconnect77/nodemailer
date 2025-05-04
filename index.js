@@ -1,7 +1,14 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
+const path = require('path');
 const app = express();
 const PORT = 3000;
+
+// Middleware to parse JSON
+app.use(express.json());
+
+// Serve static files (HTML, JS)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -14,23 +21,22 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// GET route — send 10 emails when this route is opened
-app.get('/', async (req, res) => {
+// Email sending route (triggered by button)
+app.post('/send-email', async (req, res) => {
   const mailPromises = [];
 
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 5; i++) {
     const mailOptions = {
       from: 'pandaconnect7@gmail.com',
-      to: 'subramanyamchoda50@gmail.com',
+      to: 'subramanyamchoda1@gmail.com',
       subject: `Auto Email ${i}`,
-      text: `This is email #${i} sent automatically on homepage visit.`
+      text: `This is email #${i} sent on button click.`
     };
 
-    // Add the promise to array
     mailPromises.push(
       transporter.sendMail(mailOptions)
         .then(info => {
-          console.log(`✅ Email #${i} sent: ${info.response}`);
+          console.log(`✅${i} sent: ${info.response}`);
         })
         .catch(error => {
           console.error(`❌ Failed to send email #${i}: ${error.toString()}`);
@@ -38,10 +44,8 @@ app.get('/', async (req, res) => {
     );
   }
 
-  // Wait for all to finish
   await Promise.all(mailPromises);
-
-  res.send('Sended');
+  res.send('sent on button click!');
 });
 
 // Start server
