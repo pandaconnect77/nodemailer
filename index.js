@@ -17,35 +17,27 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: 'pandaconnect7@gmail.com',
-    pass: 'pvgitcnukcfuvhog'
+    pass: 'pvgitcnukcfuvhog' // Use an app password, not your Gmail password
   }
 });
 
-// Email sending route (triggered by button)
+// Route to send a single email
 app.post('/send-email', async (req, res) => {
-  const mailPromises = [];
+  const mailOptions = {
+    from: 'pandaconnect7@gmail.com',
+    to: 'subramanyamchoda1@gmail.com',
+    subject: 'Single Email',
+    text: 'This is a single email sent on button click.'
+  };
 
-  for (let i = 1; i <= 5; i++) {
-    const mailOptions = {
-      from: 'pandaconnect7@gmail.com',
-      to: 'subramanyamchoda1@gmail.com',
-      subject: `Auto Email ${i}`,
-      text: `This is email #${i} sent on button click.`
-    };
-
-    mailPromises.push(
-      transporter.sendMail(mailOptions)
-        .then(info => {
-          console.log(`✅${i} sent: ${info.response}`);
-        })
-        .catch(error => {
-          console.error(`❌ Failed to send email #${i}: ${error.toString()}`);
-        })
-    );
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`✅ Email sent: ${info.response}`);
+    res.send('Single email sent on button click!');
+  } catch (error) {
+    console.error(`❌ Failed to send email: ${error.toString()}`);
+    res.status(500).send('Failed to send email.');
   }
-
-  await Promise.all(mailPromises);
-  res.send('sent on button click!');
 });
 
 // Start server
