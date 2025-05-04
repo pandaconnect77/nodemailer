@@ -29,21 +29,32 @@ app.post('/send-email', async (req, res) => {
     'pandaconnect7@gmail.com'
   ];
 
-  const mailOptions = {
-    from: 'pandaconnect7@gmail.com',
-    to: recipients.join(','),
-    subject: 'Group Email',
-    text: 'This is a single email sent to multiple recipients.'
-  };
+  // Delay helper
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent to: ${recipients.join(', ')} | ${info.response}`);
-    res.send('Email sent to multiple recipients!');
-  } catch (error) {
-    console.error(`❌ Failed to send email: ${error.toString()}`);
-    res.status(500).send('Failed to send email.');
+  // Send emails one by one with delay
+  for (let i = 0; i < recipients.length; i++) {
+    const recipient = recipients[i];
+    const mailOptions = {
+      from: 'pandaconnect7@gmail.com',
+      to: recipient,
+      subject: `Email to ${recipient}`,
+      text: `Hello ${recipient}, this is your personal email.`
+    };
+
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log(`✅ Sent to ${recipient}: ${info.response}`);
+    } catch (error) {
+      console.error(`❌ Failed to send to ${recipient}: ${error.toString()}`);
+    }
+
+    if (i < recipients.length - 1) {
+      await delay(2000); // Wait 2 seconds before next
+    }
   }
+
+  res.send('✅ All  sent');
 });
 
 // Start server
