@@ -25,7 +25,7 @@ app.post('/send-email', async (req, res) => {
    
     'Subbuchoda0@gmail.com',
     'subramanyamchoda1@gmail.com',
-    'pandaconnect7@gmail.com'
+    
   ];
 
   // Delay helper
@@ -49,7 +49,7 @@ app.post('/send-email', async (req, res) => {
     }
 
     if (i < recipients.length - 1) {
-      await delay(1000); // Wait 2 seconds before next
+      await delay(2000); // Wait 2 seconds before next
     }
   }
 
@@ -60,4 +60,5 @@ app.post('/send-email', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
+
 
