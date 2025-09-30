@@ -18,44 +18,25 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Email sending route (send to multiple recipients with delay)
+// Email sending route (send to a single recipient quickly)
 app.post("/send-email", async (req, res) => {
-  const recipients = [
-    "Subbuchoda0@gmail.com",
-    "subramanyamchoda1@gmail.com"
-  ];
+  const recipient = "Subbuchoda0@gmail.com"; // just one recipient
 
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  const results = [];
+  const mailOptions = {
+    from: "saisubbusai0@gmail.com",
+    to: recipient,
+    subject: `Email to ${recipient}`,
+    text: `Hello ${recipient}, this is your personal email.`,
+  };
 
-  for (let i = 0; i < recipients.length; i++) {
-    const recipient = recipients[i];
-    const mailOptions = {
-      from: "saisubbusai0@gmail.com",
-      to: recipient,
-      subject: `Email to ${recipient}`,
-      text: `Hello ${recipient}, this is your personal email.`,
-    };
-
-    try {
-      const info = await transporter.sendMail(mailOptions);
-      console.log(`✅ Sent to ${recipient}: ${info.response}`);
-      results.push({ recipient, status: "sent" });
-    } catch (error) {
-      console.error(`❌ Failed to send to ${recipient}: ${error.toString()}`);
-      results.push({ recipient, status: "failed", error: error.toString() });
-    }
-
-    if (i < recipients.length - 1) {
-      await delay(2000); // wait 2s before next send
-    }
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`✅ Sent to ${recipient}: ${info.response}`);
+    res.json({ success: true, message: `Email sent to ${recipient}` });
+  } catch (error) {
+    console.error(`❌ Failed to send to ${recipient}: ${error.toString()}`);
+    res.status(500).json({ success: false, message: "Failed to send email", error: error.toString() });
   }
-
-  res.json({
-    success: true,
-    message: "Email sending process finished",
-    results,
-  });
 });
 
 // Start server
