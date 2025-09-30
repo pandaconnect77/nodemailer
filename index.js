@@ -14,17 +14,16 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: 'pandaconnect7@gmail.com',
-    pass: 'pvgitcnukcfuvhog' // Use Gmail App Password
+    user: 'saisubbusai0@gmail.com',
+    pass: 'kxzzppnnzlwfnwss' // Use Gmail App Password
   }
 });
 
 // Email sending route (send to 4 people)
 app.post('/send-email', async (req, res) => {
   const recipients = [
-    'saisubbusai0@gmail.com',
+   
     'Subbuchoda0@gmail.com',
-    'subramanyamchoda50@gmail.com',
     'subramanyamchoda1@gmail.com',
     'pandaconnect7@gmail.com'
   ];
@@ -36,7 +35,7 @@ app.post('/send-email', async (req, res) => {
   for (let i = 0; i < recipients.length; i++) {
     const recipient = recipients[i];
     const mailOptions = {
-      from: 'pandaconnect7@gmail.com',
+      from: 'saisubbusai0@gmail.com',
       to: recipient,
       subject: `Email to ${recipient}`,
       text: `Hello ${recipient}, this is your personal email.`
@@ -50,7 +49,7 @@ app.post('/send-email', async (req, res) => {
     }
 
     if (i < recipients.length - 1) {
-      await delay(2000); // Wait 2 seconds before next
+      await delay(1000); // Wait 2 seconds before next
     }
   }
 
@@ -61,3 +60,4 @@ app.post('/send-email', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
+
